@@ -15,9 +15,19 @@ let playerSettings = {
   recoil: true,
 };
 let playerGameData = {};
-let playerHealth = 100;
+let playerHealth = 80;
 let playerState = "alive";
-let playerInv = {};
+/**
+ * @type {inventoryItem[]}
+ */
+let playerInv = [
+  {
+    img: "/imgs/health-kit.svg",
+    name: "health kit",
+    executable: heal,
+    params: {amount: 20}
+  }
+];
 let deathList = [];
 let kills = 0;
 let playerList = [];
@@ -195,6 +205,7 @@ function syncIndicators() {
   updateAmmo();
   updateHealth();
   updateStats();
+  updateInventoryList();
 }
 
 function reload() {
@@ -352,6 +363,60 @@ function respawn() {
   syncIndicators();
   document.getElementById("death").style.display = "none";
   RecoilGun.loadClip(loadedAmmo);
+}
+
+function updateInventoryList() {
+  let inventoryBar = document.createElement("DIV");
+  inventoryBar.id = "inventoryBar";
+  playerInv.forEach((item, i) => {
+    let itemHTML = document.createElement("DIV");
+    itemHTML.setAttribute("onclick",`use_item(${i})`);
+    itemHTML.classList.add("inventorySlot");
+    let itemIMG = document.createElement("IMG");
+    itemIMG.classList.add("itemImg")
+    itemIMG.src = item.img
+    itemHTML.append(itemIMG);
+    inventoryBar.append(itemHTML);
+  })
+  let invPanel = document.getElementById("inventoryPanel");
+  invPanel.innerHTML = "";
+  invPanel.append(inventoryBar);
+}
+
+/**
+ *
+ * @param {number} item_slot
+ */
+function use_item(item_slot) {
+  /*
+   * @type {inventoryItem}
+   */
+  console.log(`Using Item in slot ${item_slot}`);
+  let inv_item = playerInv[item_slot];
+  if (inv_item === undefined) {
+    return;
+  }
+  console.log(`Using item ${inv_item.name} with parameters ${JSON.stringify(inv_item.params)}`);
+  inv_item.executable(inv_item.params);
+
+  playerInv.splice(item_slot, 1);
+  updateInventoryList();
+}
+
+function heal(params) {
+  if (params.amount === undefined || !params.amount instanceof Number) {
+    return;
+  }
+  playerHealth = Math.min(100, playerHealth + params.amount)
+  updateHealth()
+}
+
+function toggleInvVisibility() {
+  if (document.getElementById("inventoryBar").style.display !== "none") {
+    document.getElementById("inventoryBar").style.display = "none";
+  } else {
+    document.getElementById("inventoryBar").style.display = null;
+  }
 }
 
 /**

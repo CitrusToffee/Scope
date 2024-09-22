@@ -152,8 +152,9 @@
           </canvas>
         </div>
       </div>
-      <div>
-
+      <div id="inventoryPanel">
+        <div id="inventoryBar">
+        </div>
       </div>
       <div id="mainBottomBar">
         <div id="mainBottomBarLeft">
@@ -165,7 +166,7 @@
         <div id="mainBottomBarMiddle">
             <progress id="healthBar" value="25" max="100"></progress>
         </div>
-        <div id="mainBottomBarRight">
+        <div id="mainBottomBarRight" onclick="toggleInvVisibility()">
           <img src="/icons/backpack.svg" alt="backpack">
         </div>
       </div>

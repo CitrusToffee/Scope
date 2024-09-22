@@ -63,6 +63,23 @@ body {
   font-size: 11pt;
 }
 
+#inventoryBar {
+    border: solid 3px #3f3f3f;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.inventorySlot {
+    aspect-ratio: 1 / 1;
+    border: solid 3px #3f3f3f;
+    height: 80%;
+    justify-self: center;
+    align-self: center;
+}
+.itemImg {
+    aspect-ratio: 1 / 1;
+    height: 60px;
+}
+
 #mainBottomBar {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
