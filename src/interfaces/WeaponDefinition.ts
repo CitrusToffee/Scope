@@ -8,4 +8,6 @@ export interface WeaponDefinition {
     maxLoadedAmmo: number;
     maxClips: number;
     behaviour: WeaponBehaviour;
+    loadedAmmo?: number;
+    unloadedAmmo?: number;
 }

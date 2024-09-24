@@ -143,9 +143,15 @@ function readyGun() {
 }
 
 function startGun() {
-  if (gameSettings.startAmmo == "full") {
-    loadedAmmo = currentWeapon.maxLoadedAmmo;
-    availableRoundsLeft = currentWeapon.maxLoadedAmmo * currentWeapon.maxClips;
+  let lA = currentWeapon.loadedAmmo;
+  let uA = currentWeapon.unloadedAmmo;
+  console.log(`loadedAmmo is ${lA} and unloadedAmmo is ${uA} and currentWeapon is ${JSON.stringify(currentWeapon)}`)
+  if (lA !== undefined && !isNaN(lA) && uA !== undefined && !isNaN(lA)) {
+    loadedAmmo = currentWeapon.loadedAmmo;
+    availableRoundsLeft = currentWeapon.unloadedAmmo;
+  } else if (gameSettings.startAmmo === "full") {
+    loadedAmmo = currentWeapon.loadedAmmo = currentWeapon.maxLoadedAmmo;
+    availableRoundsLeft = currentWeapon.unloadedAmmo = currentWeapon.maxLoadedAmmo * currentWeapon.maxClips;
   } else {
     loadedAmmo = 0;
     availableRoundsLeft = 0;
@@ -174,10 +180,11 @@ function findWeapon(name) {
 
 /**
  * sets the weapon of the player to a different weapon.
- * @param {string} name weaponname
+ * @param {WeaponDefinition} weapon weaponname
  */
-function setWeapon(name) {
-  currentWeapon = findWeapon(name);
+function setWeapon(weapon) {
+  currentWeapon = weapon;
+  console.log(`currentWeapon is ${JSON.stringify(currentWeapon)}\nand new weapon is ${JSON.stringify(weapon)}`)
   RecoilGun.gunSettings.shotId = currentWeapon.slotID;
   // Let the gun know we want this ID!
   RecoilGun.setGunId(currentWeapon.slotID);

@@ -54,12 +54,12 @@ function use_item(item_slot) {
   /*
    * @type {inventoryItem}
    */
-  console.log(`Using Item in slot ${item_slot}`);
+  //console.log(`Using Item in slot ${item_slot}`);
   let inv_item = playerInv[item_slot];
   if (inv_item === undefined) {
     return;
   }
-  console.log(`Using item ${inv_item.name} with parameters ${JSON.stringify(inv_item.params)}`);
+  //console.log(`Using item ${inv_item.name} with parameters ${JSON.stringify(inv_item.params)}`);
   inv_item.executable(inv_item.params);
 
   playerInv.splice(item_slot, 1);
@@ -75,19 +75,30 @@ function heal(params) {
   updateHealth()
 }
 
+
+/**
+ *
+ * @param {String | WeaponDefinition} params.switch_to
+ */
 function swapWeapon(params) {
-  if (params.switch_to === undefined || !params.switch_to instanceof String) {
+  if (params.switch_to === undefined) {
     return;
   }
-
-  let add_to_inv = currentWeapon.name
-  setWeapon(params.switch_to)
+  console.log(`CurrentWeapon is ${JSON.stringify(currentWeapon)} and params.switch_to is ${params.switch_to}`)
+  currentWeapon.unloadedAmmo = availableRoundsLeft
+  currentWeapon.loadedAmmo = loadedAmmo
+  let add_to_inv = currentWeapon
+  if (typeof params.switch_to === "string") {
+    setWeapon(findWeapon(params.switch_to))
+  } else {
+    setWeapon(params.switch_to)
+  }
   updateAmmo();
 
   // add previous Weapon to inventory to switch to.
   playerInv.push({
-    img: `/imgs/${add_to_inv}.svg`,
-    name: add_to_inv,
+    img: `/imgs/${add_to_inv.name}.svg`,
+    name: add_to_inv.name,
     executable: swapWeapon,
     params: {switch_to: add_to_inv}
   })
