@@ -69,9 +69,17 @@
         <h1>Game over</h1>
       </div>
       <div id="leaderboardList">
-        <div class="player">
-          <h3>Unknown</h3>
-        </div>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Kills</th>
+            <th>Assists</th>
+            <th>Deaths</th>
+          </tr>
+          <tbody id="scoreboardBody">
+            <span class="loader"></span>
+          </tbody>
+        </table>
       </div>
       <div id="leaderboardBottom">
         <div id="continueButton">
@@ -171,6 +179,7 @@
       </div>
     </div>
     <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
     <script src="src/client/map.js"></script>
     <script src="src/client/game.js"></script>
     <script src="src/client/services/audio.js"></script>

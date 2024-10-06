@@ -1,7 +1,11 @@
+import { Socket} from "socket.io";
+import { Stats } from "./Stats";
+
 export interface Player {
     username: string | undefined;
-    ws: WebSocket;
+    socket: Socket;
     uuid: string;
     state?: string;
     gunID?: number;
+    stats: Stats
 }

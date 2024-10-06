@@ -56,16 +56,39 @@ function lobbyUpdated(players) {
   });
 }
 
+function updateScoreboard(scoreboard){
+      const scoreboardBody = document.getElementById("scoreboardBody");
+      scoreboardBody.innerHTML = "";
+
+      const loader = document.querySelector(".loader");
+      if (loader) {
+          loader.remove();
+      }
+
+      scoreboard.forEach((player) => {
+          const playerRow = document.createElement("tr");
+
+          playerRow.innerHTML = `
+            <td>${player.username}</td>
+            <td>${player.stats.kills}</td>
+            <td>${player.stats.assists}</td>
+            <td>${player.stats.deaths}</td>
+          `;
+
+          scoreboardBody.appendChild(playerRow);
+      });
+}
+
 /**
  * Is executed every time the "ready" button is pressed to send the ready state to the server.
  */
 function ready() {
   if (readyBtn.classList.contains("readyBtnPressed")) {
     readyBtn.classList.remove("readyBtnPressed");
-    socket.send(JSON.stringify({ 'msgType': 'setState', 'state': 'lobby' }));
+    socket.emit('setState', {'state': 'lobby' });
   } else {
     readyBtn.classList.add("readyBtnPressed");
-    socket.send(JSON.stringify({ 'msgType': 'setState', 'state': 'ready' }));
+    socket.emit('setState',{ 'state': 'ready' });
   }
 }
 
@@ -190,6 +213,12 @@ function syncIndicators() {
   updateStats();
 }
 
+function fireRate(){
+  // Cycle through current fire rate.
+  // 1 shot - 3 shot - full auto
+  // Full auto: 0xFE, Plasma: 0x00, Burst of up to N shots: 0x01-0xFD
+}
+
 function reload() {
   if (playerState === "dead" || secondsLeft <= 0) {
     // dead players can't shoot :^)
@@ -273,8 +302,10 @@ function irEvent(event) {
     playerHealth = playerHealth - damage;
     updateHealth();
 
+
+
     if (playerHealth <= 0) {
-      let deathInfo = {
+      const deathInfo = {
         shooterID: shooterID,
         shooterName: getPlayerFromID(shooterID).username,
         killedName: username,
@@ -283,6 +314,14 @@ function irEvent(event) {
       }
       deathList.push(deathInfo);
       dead(deathInfo);
+    } else {
+      const damageInfo = {
+        shooterID: shooterID,
+        shooterName: getPlayerFromID(shooterID).username,
+        damageAmount: damage,
+        time: new Date()
+      }
+      socket.emit("damage", {"info": damageInfo });
     }
   }
 }
@@ -306,7 +345,7 @@ function dead(deathInfo) {
   updateDeathScreen();
   document.getElementById("respawnTimer").innerHTML = countdown;
   RecoilGun.removeClip();
-  socket.send(JSON.stringify({ "msgType": "kill", "info": deathInfo }));
+  socket.emit("kill",{"info": deathInfo });
   stopMap();
   document.getElementById("death").style.display = "block";
   playerState = "dead";
@@ -372,6 +411,7 @@ document.getElementById("connectGunbtn").addEventListener("click", () => {
     RecoilGun.on("irEvent", irEvent);
     RecoilGun.on("ammoChanged", ammoChanged);
     RecoilGun.on("reloadBtn", reload);
+    RecoilGun.on("radioBtn", fireRate);
     RecoilGun.switchWeapon(2);
     RecoilGun.startTelemetry();
     RecoilGun.updateSettings();
