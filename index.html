@@ -82,7 +82,7 @@
     <!-- Lobby -->
     <div id="lobby">
       <div id="lobbybar">
-        <img src="/icons/settings.svg" alt="settings">
+        <img src="/icons/settings.svg" alt="settings" onclick="switchGameSettings()" class="settings-icon">
         <h1>Player Lobby</h1>
       </div>
       <div id="roster">
@@ -93,6 +93,23 @@
       <div id="readyContainer">
         <div id="readyBtn">
           <h1>Ready</h1>
+        </div>
+      </div>
+    </div>
+
+    <div id="gameSettings" style="display: none;">
+      <div id="gameSettingsTopBar">
+        <img src="/icons/settings.svg" alt="settings" onclick="switchGameSettings()" class="settings-icon">
+        <h1>Game Settings</h1>
+      </div>
+      <div id="Settings">
+        <h3>Setting1</h3>
+        <div class="player">
+        </div>
+      </div>
+      <div id="settingsContainer">
+        <div id="sendSettingsButton" class="readyBtnPressed" style="width: 300px">
+          <h1>Change Settings</h1>
         </div>
       </div>
     </div>

@@ -117,6 +117,22 @@ function showLeaderboard() {
   leaderBoard.style.display = "grid";
 }
 
+/*
+ * opens / closes the game settings, depending on if the settings are open or not. (the one in Lobby)
+ */
+function switchGameSettings() {
+  let gameSettingsDOM = document.getElementById("gameSettings")
+  let lobbyDOM = document.getElementById("lobby")
+  console.log(gameSettingsDOM.style.display)
+  if (gameSettingsDOM.style.display === "none" || gameSettingsDOM.style.display === undefined || gameSettingsDOM.style.display === null) {
+    lobbyDOM.style.display = "none"
+    gameSettingsDOM.style.display = "grid"
+  } else {
+    lobbyDOM.style.display = "grid"
+    gameSettingsDOM.style.display = "none"
+  }
+}
+
 function backToLobby() {
   readyBtn.classList.remove("readyBtnPressed");
   document.getElementById("lobby").style.display = "grid";
