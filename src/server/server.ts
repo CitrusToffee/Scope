@@ -136,7 +136,10 @@ wss.on("connection", (ws: WebSocket) => {
 				ws.player.username = command.username;
 				lobbyUpdate(ws.game.players);
 				break;
-
+			case "getGameSettings":
+				console.log("Request for game settings")
+				ws.send(JSON.stringify({ msgType: "updateGameSettings", settings: game.settings }));
+				break;
 			default:
 				if (ws.game) {
 					handleGameMessage(ws, command);

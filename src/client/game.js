@@ -125,12 +125,54 @@ function switchGameSettings() {
   let lobbyDOM = document.getElementById("lobby")
   console.log(gameSettingsDOM.style.display)
   if (gameSettingsDOM.style.display === "none" || gameSettingsDOM.style.display === undefined || gameSettingsDOM.style.display === null) {
-    lobbyDOM.style.display = "none"
-    gameSettingsDOM.style.display = "grid"
+    let keys = Object.keys(gameSettings);
+    if (keys.length <= 0) {
+      socket.send(JSON.stringify({'msgType':'getGameSettings'}) );
+    } else {
+      fillGameSettings();
+    }
+    lobbyDOM.style.display = "none";
+    gameSettingsDOM.style.display = "grid";
   } else {
-    lobbyDOM.style.display = "grid"
-    gameSettingsDOM.style.display = "none"
+    lobbyDOM.style.display = "grid";
+    gameSettingsDOM.style.display = "none";
   }
+}
+
+function fillGameSettings() {
+  console.log("Filling the Game Settings.")
+  let keys = Object.keys(gameSettings).sort();
+  let gameSettingsFormDOM = document.getElementById("gameSettingsForm")
+  gameSettingsFormDOM.innerHTML = "";
+  keys.forEach(s => {
+    let container = document.createElement("div", )
+    container.classList.add("setting")
+    let settingLabel = document.createElement("H3")
+    settingLabel.innerHTML = s
+    let settingInput = document.createElement("input")
+    let defaultValue = gameSettings[s]
+    if (typeof defaultValue === "boolean") {
+      settingInput.type = "checkbox"
+      settingInput.checked = defaultValue
+    } else {
+      settingInput.type = "text"
+      settingInput.classList.add("input-class")
+    }
+    console.log(s, defaultValue)
+    settingInput.value = defaultValue
+    settingInput.name = s
+    container.appendChild(settingLabel)
+    container.appendChild(settingInput)
+    gameSettingsFormDOM.appendChild(container)
+  })
+}
+
+function sendSettings() {
+  let form = document.forms["gameSettingsForm"]
+  let keys = Object.keys(gameSettings)
+  keys.forEach(k => {
+
+  })
 }
 
 function backToLobby() {

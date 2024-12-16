@@ -17,6 +17,7 @@ function onMessage(event) {
       break;
     case 'updateGameSettings':
       gameSettings = message.settings;
+      fillGameSettings();
       break;
     case 'assignGunID':
       playerGameData.gunID = message.GunID;

@@ -102,11 +102,12 @@
         <img src="/icons/settings.svg" alt="settings" onclick="switchGameSettings()" class="settings-icon">
         <h1>Game Settings</h1>
       </div>
-      <div id="Settings">
-        <h3>Setting1</h3>
-        <div class="player">
+      <form onsubmit="sendSettings(); return false" id="gameSettingsForm">
+        <div class="setting">
+          <h3>Setting1</h3>
+          <input id="setting1" type="text" placeholder="setting value" autocomplete="off" class="input-class">
         </div>
-      </div>
+      </form>
       <div id="settingsContainer">
         <div id="sendSettingsButton" class="readyBtnPressed" style="width: 300px">
           <h1>Change Settings</h1>
