@@ -48,7 +48,7 @@ function lobbyUpdated(players) {
     let text = document.createElement("H3");
     container.classList.add('player');
     if (player.isHost) {
-      text.innerHTML = "(Host) "
+      text.innerHTML = "<img src='/icons/crown.svg' style='width: 20px; height: 15px'> "
     }
     text.innerHTML += player.username;
     if (player.ready) {

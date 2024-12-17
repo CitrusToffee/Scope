@@ -169,7 +169,15 @@ wss.on("connection", (ws: WebSocket) => {
 			}
 			console.log(`${ws.game.players[missingPlayerIndex].username || "Player"} Disconnected`);
 			if (game.state == "waiting") {
+				let wasHost = game.players[missingPlayerIndex].isHost;
 				ws.game.players.splice(missingPlayerIndex, 1);
+				if (wasHost) {
+					console.log("User was a host");
+					let newHost = game.players.filter((player) => player.state !== undefined)[0]
+					newHost.isHost = true;
+					newHost.ws.send(JSON.stringify({msgType: "setLobbyHost", "lobbyHost": true}))
+
+				}
 				lobbyUpdate(ws.game.players);
 			}
 		}
