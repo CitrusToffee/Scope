@@ -83,12 +83,17 @@ function handleJoin(ws: WebSocket & { id?: number; game?: Game; player?: Player 
 			username: undefined,
 			ws: ws,
 			uuid: makeUID(10),
+			isHost: false,
 		};
+		if (game.players.length == 0) {
+			console.log("Player is first one, so this one is the Host!")
+			player.isHost = true;
+		}
 		game.players.push(player);
 		ws.game = game;
 		ws.player = player;
-		console.log(`ws now should have a game: ${inspect(ws.game)}`);
-		console.log(`as well as a player: ${inspect(ws.player)}`);
+		//console.log(`ws now should have a game: ${inspect(ws.game)}`);
+		//console.log(`as well as a player: ${inspect(ws.player)}`);
 	}
 }
 
@@ -135,6 +140,9 @@ wss.on("connection", (ws: WebSocket) => {
 
 			case "setUsername":
 				ws.player.username = command.username;
+				if (ws.player.isHost) {
+					ws.send(JSON.stringify({msgType: "setLobbyHost", "lobbyHost": true}))
+				}
 				lobbyUpdate(ws.game.players);
 				break;
 			case "getGameSettings":
@@ -315,6 +323,7 @@ function lobbyUpdate(players: Player[]) {
 			username: player.username,
 			uuid: player.uuid,
 			ready: player.state === "ready",
+			isHost: player.isHost,
 		}));
 
 	players.forEach((player) => {

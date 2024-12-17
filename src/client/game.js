@@ -47,7 +47,10 @@ function lobbyUpdated(players) {
     let container = document.createElement("DIV");
     let text = document.createElement("H3");
     container.classList.add('player');
-    text.innerHTML = player.username;
+    if (player.isHost) {
+      text.innerHTML = "(Host) "
+    }
+    text.innerHTML += player.username;
     if (player.ready) {
       text.innerHTML += " - <u>Ready</u>"
     }
@@ -463,7 +466,9 @@ document.getElementById("connectGunbtn").addEventListener("click", () => {
 
 // Add Eventlistener for the set gameSettings-Button.
 document.getElementById("sendGameSettingsButton").addEventListener("click", function () {
-  sendSettings();
+  if (!document.getElementById("sendGameSettingsButton").classList.contains("readyBtnPressed") && !readyBtn.classList.contains("readyBtnPressed")) {
+    sendSettings();
+  }
 })
 
 window.onbeforeunload = (evt) => {

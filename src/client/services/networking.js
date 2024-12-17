@@ -11,7 +11,7 @@ function onMessage(event) {
       lobbyUpdated(message.players);
       break;
     case 'updateGameState':
-      if (message.state == "starting") {
+      if (message.state === "starting") {
         preGameStart(message.cooldown);
       }
       break;
@@ -30,6 +30,13 @@ function onMessage(event) {
       break;
     case 'kill':
       enemyKilled();
+      break;
+    case 'setLobbyHost':
+      if (message.lobbyHost) {
+        document.getElementById("sendGameSettingsButton").classList.remove("readyBtnPressed");
+      } else {
+        document.getElementById("sendGameSettingsButton").classList.add("readyBtnPressed");
+      }
       break;
     case 'gameAlreadyStarted':
       // prohibit joinning games that already started, but only when the player is not in a running game
