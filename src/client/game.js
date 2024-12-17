@@ -170,9 +170,31 @@ function fillGameSettings() {
 function sendSettings() {
   let form = document.forms["gameSettingsForm"]
   let keys = Object.keys(gameSettings)
-  keys.forEach(k => {
-
-  })
+  let newGameSettings = structuredClone(gameSettings)
+  for (let k of keys) {
+    let value = form[k].value;
+    let requiredInputType = typeof gameSettings[k];
+    switch (requiredInputType) {
+      case "string":
+        break;
+      case "number":
+        if (Number(value) === Number(value)) {
+          value = Number(value)
+        } else {
+          alert(`${k} is not of Type ${requiredInputType}!`)
+          return;
+        }
+        break;
+      case "boolean":
+        value = form[k].checked
+        break;
+      default:
+        alert(`Something went wrong, the required type of the input is ${requiredInputType}`)
+        return;
+    }
+    newGameSettings[k] = value
+  }
+  socket.send(JSON.stringify({msgType: "updateGameSettings", settings: newGameSettings}))
 }
 
 function backToLobby() {
@@ -438,6 +460,11 @@ document.getElementById("connectGunbtn").addEventListener("click", () => {
     bleFailure();
   });
 });
+
+// Add Eventlistener for the set gameSettings-Button.
+document.getElementById("sendGameSettingsButton").addEventListener("click", function () {
+  sendSettings();
+})
 
 window.onbeforeunload = (evt) => {
   evt.preventDefault();

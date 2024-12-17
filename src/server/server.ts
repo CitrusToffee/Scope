@@ -126,6 +126,7 @@ wss.on("connection", (ws: WebSocket) => {
 				break;
 			case "updateGameSettings":
 				game.settings = command.settings;
+				wss.clients.forEach((client) => {client.send(JSON.stringify({ msgType: "updateGameSettings", settings: game.settings }))})
 				break;
 
 			case "updateWeaponDefinitions":
