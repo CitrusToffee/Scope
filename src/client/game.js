@@ -126,7 +126,6 @@ function showLeaderboard() {
 function switchGameSettings() {
   let gameSettingsDOM = document.getElementById("gameSettings")
   let lobbyDOM = document.getElementById("lobby")
-  console.log(gameSettingsDOM.style.display)
   if (gameSettingsDOM.style.display === "none" || gameSettingsDOM.style.display === undefined || gameSettingsDOM.style.display === null) {
     let keys = Object.keys(gameSettings);
     if (keys.length <= 0) {
@@ -143,7 +142,6 @@ function switchGameSettings() {
 }
 
 function fillGameSettings() {
-  console.log("Filling the Game Settings.")
   let keys = Object.keys(gameSettings).sort();
   let gameSettingsFormDOM = document.getElementById("gameSettingsForm")
   gameSettingsFormDOM.innerHTML = "";
@@ -161,7 +159,6 @@ function fillGameSettings() {
       settingInput.type = "text"
       settingInput.classList.add("input-class")
     }
-    console.log(s, defaultValue)
     settingInput.value = defaultValue
     settingInput.name = s
     container.appendChild(settingLabel)
@@ -197,7 +194,14 @@ function sendSettings() {
     }
     newGameSettings[k] = value
   }
-  socket.send(JSON.stringify({msgType: "updateGameSettings", settings: newGameSettings}))
+  socket.send(JSON.stringify({msgType: "updateGameSettings", settings: newGameSettings}));
+  let note = document.createElement("h3");
+  note.style.textAlign = "center";
+  note.style.color = "limegreen";
+  note.id = "successfulSettingsSentNote"
+  note.innerHTML = "Settings successfully sent!"
+  document.getElementById("settingsContainer").prepend(note)
+  setTimeout(() => {document.getElementById("successfulSettingsSentNote").remove()}, 4000)
 }
 
 function backToLobby() {

@@ -171,7 +171,7 @@ wss.on("connection", (ws: WebSocket) => {
 			if (game.state == "waiting") {
 				let wasHost = game.players[missingPlayerIndex].isHost;
 				ws.game.players.splice(missingPlayerIndex, 1);
-				if (wasHost) {
+				if (wasHost && game.players.length > 0) {
 					console.log("User was a host");
 					let newHost = game.players.filter((player) => player.state !== undefined)[0]
 					newHost.isHost = true;
