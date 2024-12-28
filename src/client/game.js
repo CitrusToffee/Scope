@@ -204,6 +204,17 @@ function sendSettings() {
   setTimeout(() => {document.getElementById("successfulSettingsSentNote").remove()}, 4000)
 }
 
+function setLeaderboard(players) {
+  let leaderboard = document.getElementById("leaderboardList");
+  leaderboard.innerHTML = "<div class='player' style='background:#2e608f'><h3><div class='leaderboard_kd'>K</div> | <div class='leaderboard_kd'>D</div> - Username</h3></div>";
+  players.forEach((player) => {
+    let playerElement = document.createElement("div");
+    playerElement.classList.add("player");
+    playerElement.innerHTML = `<h3><div class='leaderboard_kd'>${player.kills}</div> | <div class='leaderboard_kd'>${player.deaths}</div> - ${player.username}</h3>`;
+    leaderboard.appendChild(playerElement);
+  })
+}
+
 function backToLobby() {
   readyBtn.classList.remove("readyBtnPressed");
   document.getElementById("lobby").style.display = "grid";

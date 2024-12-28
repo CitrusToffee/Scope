@@ -28,6 +28,9 @@ function onMessage(event) {
     case 'playerListUpdate':
       playerList = message.players;
       break;
+    case 'setLeaderboard':
+      setLeaderboard(message.players);
+      break;
     case 'kill':
       enemyKilled();
       break;

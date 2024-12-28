@@ -358,6 +358,11 @@ progress[value]::-webkit-progress-value {
 #leaderboardList {
   overflow: scroll;
 }
+.leaderboard_kd {
+  width: 20px;
+  display: inline-block;
+  text-align: center;
+}
 .player {
   border-radius: 13px;
   border-width: 2px;

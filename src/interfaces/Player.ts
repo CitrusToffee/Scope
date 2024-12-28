@@ -5,4 +5,6 @@ export interface Player {
     isHost: boolean;
     state?: string;
     gunID?: number;
+    deaths: number;
+    kills: number;
 }

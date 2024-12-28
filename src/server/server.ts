@@ -84,6 +84,8 @@ function handleJoin(ws: WebSocket & { id?: number; game?: Game; player?: Player 
 			ws: ws,
 			uuid: makeUID(10),
 			isHost: false,
+			kills: 0,
+			deaths: 0
 		};
 		if (game.players.length == 0) {
 			console.log("Player is first one, so this one is the Host!")
@@ -173,10 +175,14 @@ wss.on("connection", (ws: WebSocket) => {
 				ws.game.players.splice(missingPlayerIndex, 1);
 				if (wasHost && game.players.length > 0) {
 					console.log("User was a host");
-					let newHost = game.players.filter((player) => player.state !== undefined)[0]
-					newHost.isHost = true;
-					newHost.ws.send(JSON.stringify({msgType: "setLobbyHost", "lobbyHost": true}))
-
+					let newHost = game.players.filter((player) => player.state !== undefined)
+					if (newHost.length != 0) {
+						newHost[0].isHost = true;
+						newHost[0].ws.send(JSON.stringify({msgType: "setLobbyHost", "lobbyHost": true}))
+					} else {
+						game.players[0].isHost = true;
+						game.players[0].ws.send(JSON.stringify({msgType: "setLobbyHost", "lobbyHost": true}))
+					}
 				}
 				lobbyUpdate(ws.game.players);
 			}
@@ -239,8 +245,18 @@ function startGame() {
 }
 
 function endGame() {
+	let playerList = [];
+	game.players.forEach((player) => {
+		playerList.push({
+			username: player.username,
+			kills: player.kills,
+			deaths: player.deaths
+		})
+	})
+
 	game.players.forEach((player) => {
 		player.ws.send(JSON.stringify({ msgType: "updateGameState", state: "ended" }));
+		player.ws.send(JSON.stringify({ msgType: "setLeaderboard", players: playerList}))
 	});
 	console.log(`Game ended (${game.id})`);
 	game.state = "waiting";
@@ -290,13 +306,18 @@ function handleGameMessage(ws, message) {
 			/*
 			message.info includes attributes: shooterID, shooterName, killedName, weapon, time
 			 */
-			let killer = ws.game.players.find((player) => {
+			let killer: Player = ws.game.players.find((player: Player) => {
 				console.log("== Try to match the shooter id with a player ==");
 				console.log(`player.username: ${player.username}`);
 				console.log(`message.info.shooterName: ${message.info.shooterName}`);
 
 				return player.username == message.info.shooterName;
 			});
+
+			ws.game.players.find((player: Player) => {
+				return player.username == message.info.killedName;
+			}).deaths += 1;
+			killer.kills += 1;
 
 			try {
 				let killmsg = {
